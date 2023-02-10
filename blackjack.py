@@ -5,10 +5,54 @@ def random():
     generated = random.randint(1,13)
     return generated
 
+def clearScreen():
+    import os
+    from sys import platform
+    if platform == "linux" or platform == "linux2":
+        os.system('clear')
+    elif platform == "darwin":
+        os.system('clear')
+    elif platform == "win32":
+        os.system('cls')
+
 cash = 100
 bet = 0
 cards = []
+cardsDisp = []
 dealercards = []
+dealercardsDisp = []
+
+cardsvalue = {
+    13: 10,
+    12: 10,
+    11: 10,
+    10: 10,
+    9: 9,
+    8: 8,
+    7: 7,
+    6: 6,
+    5: 5,
+    4: 4,
+    3: 3,
+    2: 2,
+    1: 1
+}
+
+cardfaces = {
+    13: "K",
+    12: "Q",
+    11: "J",
+    10: "10",
+    9: "9",
+    8: "8",
+    7: "7",
+    6: "6",
+    5: "5",
+    4: "4",
+    3: "3",
+    2: "2",
+    1: "A"
+}
 
 def checkBust():
     global cards
@@ -24,24 +68,35 @@ def checkBust():
 def gameReset():
     global cards
     global dealercards
+    global cardsDisp
+    global dealercardsDisp
     cards = []
+    cardsDisp = []
     dealercards = []
+    dealercardsDisp = []
         
 def addCard():
-    cards.append(random())
+    #cards.append(random())
+    card = random()
+    cards.append(cardsvalue.get(card))
+    cardsDisp.append(cardfaces.get(card))
+    print("You drew " + str(cardsDisp[-1]))
     checkBust()
     
-def addDealerCard():   
-    dealercards.append(random())
+def addDealerCard():
+    card = random()
+    dealercards.append(cardsvalue.get(card))
+    dealercardsDisp.append(cardfaces.get(card))
     
 def addDealerOtherCards():
     global cards
     global cash 
     global bet
     global dealercards
+    global dealercardsDisp
     
-    dealercards.append(random())
-    print("Dealer drew " + str(dealercards[-1]))
+    addDealerCard()
+    print("Dealer drew " + str(dealercardsDisp[-1]))
     if sum(dealercards) > 16:
         if sum(dealercards) < 22:
             checkWin()
@@ -76,6 +131,7 @@ def checkWin():
     
 def addCardQuestion():
     question = input("Do you want another card? (y/n): ")
+    clearScreen()
     if question == "y":
         addCard()
         cardList()
@@ -86,7 +142,7 @@ def addCardQuestion():
         print("Unsupported symbol")
 
 def cardList():   
-    print("Your cards are: " + str(cards) + ", total: " + str(sum(cards)))
+    print("Your cards are: " + str(cardsDisp) + ", total: " + str(sum(cards)))
 
 running = 1
 
@@ -97,17 +153,23 @@ def theGame():
     bet = int(input("How much do you want to bet? (Cash: "+str(cash)+") "))
     if cash < bet:
         print("Not enough money!")
+        clearScreen()
         theGame()
     
+    clearScreen()
     addCard()
     addCard()
     cardList()
     addDealerCard()
-    print("Dealers card is: " + str(dealercards))
+    print("Dealers card is: " + str(dealercardsDisp))
     addCardQuestion()
     addDealerOtherCards()
 
 while running == 1:
+    clearScreen()
+    print("BLACKJACK (GARBAGE EDITION)")
+    print("By Asbestos 2023")
+    print("------------------------")
     startQuestion = input("Do you want to play?? (y/n): ")
     if startQuestion == "y":
           theGame()
