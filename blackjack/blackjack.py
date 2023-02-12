@@ -141,7 +141,7 @@ def addCardQuestion():
     else:
         print("Unsupported symbol")
 
-def cardList():   
+def cardList():
     print("Your cards are: " + str(cardsDisp) + ", total: " + str(sum(cards)))
 
 running = 1
@@ -152,8 +152,8 @@ def theGame():
     
     bet = int(input("How much do you want to bet? (Cash: "+str(cash)+") "))
     if cash < bet:
-        print("Not enough money!")
         clearScreen()
+        print("Not enough money!")
         theGame()
     
     clearScreen()
