@@ -17,6 +17,7 @@ def clearScreen():
 
 cash = 100
 bet = 0
+cardsTotal = 0
 cards = []
 cardsDisp = []
 dealercards = []
@@ -60,8 +61,8 @@ def checkBust():
     global bet
     global dealercards
     
-    if (sum(cards) > 21):
-        print("You've gone bust! You had a total of " + str(sum(cards)))
+    if (cardsTotal > 21):
+        print("You've gone bust! You had a total of " + str(cardsTotal))
         cash = cash - bet
         theGame()
 
@@ -74,14 +75,24 @@ def gameReset():
     cardsDisp = []
     dealercards = []
     dealercardsDisp = []
+    cardsTotal = 0
         
 def addCard():
+    global cardsTotal
     #cards.append(random())
     card = random()
     cards.append(cardsvalue.get(card))
     cardsDisp.append(cardfaces.get(card))
     print("You drew " + str(cardsDisp[-1]))
+    cardsTotal = checkCardsValue()
     checkBust()
+    
+def checkCardsValue():
+    if (1 in cards):
+        if sum(cards) < 12:
+            return (sum(cards) + 10)
+    else:
+        return sum(cards)
     
 def addDealerCard():
     card = random()
@@ -112,23 +123,33 @@ def checkWin():
     global bet
     global dealercards
     
-    if sum(dealercards) == sum(cards):
+    if sum(dealercards) == cardsTotal:
         print("Tie!")
-        print("You both had: " + str(sum(cards)))
+        print("You both had: " + str(cardsTotal))
         theGame()
-    elif sum(dealercards) > sum(cards):
+    elif sum(dealercards) > cardsTotal:
         print("Dealer wins!")
-        print("You had: " + str(sum(cards)))
+        print("You had: " + str(cardsTotal))
         print("Dealer had: " + str(sum(dealercards)))
         cash = cash - bet
         theGame()
     else:
         print("You win!")
-        print("You had: " + str(sum(cards)))
+        print("You had: " + str(cardsTotal))
         print("Dealer had: " + str(sum(dealercards)))
         cash = cash + bet
         theGame()
-    
+
+def checkBlackjackFirst():
+    global cardsTotal
+    global cash
+    global bet
+    if cardsTotal == 21:
+        print("You got an instant blackjack!")
+        print("Your payout is " + str(bet * 2))
+        cash = cash + (bet*2)
+        theGame()
+        
 def addCardQuestion():
     question = input("Do you want another card? (y/n): ")
     clearScreen()
@@ -142,7 +163,7 @@ def addCardQuestion():
         print("Unsupported symbol")
 
 def cardList():
-    print("Your cards are: " + str(cardsDisp) + ", total: " + str(sum(cards)))
+    print("Your cards are: " + str(cardsDisp) + ", total: " + str(cardsTotal))
 
 running = 1
 
@@ -159,6 +180,7 @@ def theGame():
     clearScreen()
     addCard()
     addCard()
+    checkBlackjackFirst()
     cardList()
     addDealerCard()
     print("Dealers card is: " + str(dealercardsDisp))
