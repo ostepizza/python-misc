@@ -1,5 +1,3 @@
-import random
-
 def random():
     import random
     generated = random.randint(1,13)
